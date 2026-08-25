@@ -1,0 +1,46 @@
+body{
+background-color: bisque;
+}
+.navbar{
+background-color: burlywood;
+color: white
+}
+.about{
+    background-color: lavenderblush;
+    display: flex;
+}
+.about .image{
+   width: 30%;
+   border: 1px solid black;
+   /* padding-right: 5%; */
+   padding:5%;
+
+}
+.image img{
+    height: 300px;
+    width:400px;
+
+}
+.para{
+    padding: 5%;
+}
+.projects{
+    display: flex;
+background-color: rgb(153, 117, 186);
+}
+.project-card1,.project-card2,.project-card3{
+    width: 200px;
+    height: 200px;
+    margin:5%;
+    background-color: bisque;
+}
+
+.skills {
+ background-color: azure; 
+ text-align: center; 
+}
+
+.footer{
+    text-align: center;
+   
+}
