@@ -1,1 +1,374 @@
+<!-- import random
+user=int(input("Guess a Number BETWEEN 1 TO 100 OR PRESS 0 TO EXIT: "))
+a=random.randint(1,101)
+print(a)
+while user !=0:
+    if(user>a):
+        print("wrong number")
+        print("Hint number is below that")
+    elif(user<a):
+        print("wrong number")
+        print("Hint number is above that")
+    elif(user==a):
+        print("hoooray!!!")
+        print("congralutions you win")
+        break
+    user=int(input("Guess a Number BETWEEN 1 TO 100 OR PRESS 0 TO EXIT: "))
+print("Thankyou for playing")  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎯 Number Guessing Game</title>
 
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#4facfe,#00c6ff,#6a11cb);
+}
+
+.container{
+    width:420px;
+    background:#fff;
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+    box-shadow:0 15px 30px rgba(0,0,0,.3);
+}
+
+h1{
+    color:#333;
+    margin-bottom:15px;
+}
+
+select{
+    width:80%;
+    padding:10px;
+    border-radius:8px;
+    margin:15px 0;
+    font-size:16px;
+}
+
+.stats{
+    display:flex;
+    justify-content:space-between;
+    margin:20px 0;
+    font-weight:bold;
+}
+
+.stats div{
+    background:#f3f3f3;
+    padding:10px;
+    border-radius:10px;
+    width:31%;
+}
+
+input{
+    width:85%;
+    padding:12px;
+    font-size:18px;
+    text-align:center;
+    border-radius:10px;
+    border:2px solid #ccc;
+    outline:none;
+}
+
+input:focus{
+    border-color:#4facfe;
+}
+
+.buttons{
+    margin-top:20px;
+}
+
+button{
+    margin:5px;
+    padding:10px 18px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+#guessBtn{
+    background:#28a745;
+}
+
+#guessBtn:hover{
+    background:#1e7e34;
+}
+
+#newBtn{
+    background:#007bff;
+}
+
+#newBtn:hover{
+    background:#0056b3;
+}
+
+#exitBtn{
+    background:#dc3545;
+}
+
+#exitBtn:hover{
+    background:#b02a37;
+}
+
+#message{
+    margin-top:25px;
+    min-height:40px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.win{
+    color:green;
+}
+
+.lose{
+    color:red;
+}
+
+.info{
+    color:#0d6efd;
+}
+
+.warning{
+    color:orange;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>🎯 Number Guessing Game</h1>
+
+<p><b>Select Difficulty</b></p>
+
+<select id="level">
+    <option value="easy">Easy (1-50 | 10 Chances)</option>
+    <option value="medium" selected>Medium (1-100 | 7 Chances)</option>
+    <option value="hard">Hard (1-200 | 5 Chances)</option>
+</select>
+
+<div class="stats">
+
+<div>
+❤️<br>
+<span id="chance">7</span>
+</div>
+
+<div>
+🏆<br>
+<span id="score">0</span>
+</div>
+
+<div>
+🥇<br>
+<span id="highscore">0</span>
+</div>
+
+</div>
+
+<input
+type="number"
+id="guess"
+placeholder="Enter your Guess">
+
+<div class="buttons">
+
+<button id="guessBtn">Guess</button>
+
+<button id="newBtn">New Game</button>
+
+<button id="exitBtn">Exit</button>
+
+</div>
+
+<div id="message"></div>
+
+</div>
+
+<script>
+
+let randomNumber;
+let maxNumber;
+let chances;
+let score=0;
+
+let highScore=localStorage.getItem("highScore") || 0;
+
+document.getElementById("highscore").innerHTML=highScore;
+
+function startGame(){
+
+let level=document.getElementById("level").value;
+
+if(level==="easy"){
+maxNumber=50;
+chances=10;
+}
+else if(level==="medium"){
+maxNumber=100;
+chances=7;
+}
+else{
+maxNumber=200;
+chances=5;
+}
+
+randomNumber=Math.floor(Math.random()*maxNumber)+1;
+
+document.getElementById("chance").innerHTML=chances;
+
+document.getElementById("guess").value="";
+document.getElementById("guess").disabled=false;
+
+document.getElementById("guessBtn").disabled=false;
+
+document.getElementById("message").innerHTML="";
+
+document.getElementById("guess").focus();
+
+}
+
+startGame();
+
+document.getElementById("guessBtn").addEventListener("click",checkGuess);
+
+document.getElementById("newBtn").addEventListener("click",startGame);
+
+document.getElementById("exitBtn").addEventListener("click",exitGame);
+
+document.getElementById("level").addEventListener("change",startGame);
+
+document.getElementById("guess").addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+
+checkGuess();
+
+}
+
+});
+
+function checkGuess(){
+
+let input=document.getElementById("guess").value.trim();
+
+if(input===""){
+
+showMessage("⚠ Please enter a number.","warning");
+
+return;
+
+}
+
+let guess=Number(input);
+
+if(guess<1 || guess>maxNumber){
+
+showMessage("Enter number between 1 and "+maxNumber,"warning");
+
+return;
+
+}
+
+chances--;
+
+document.getElementById("chance").innerHTML=chances;
+
+if(guess===randomNumber){
+
+score+=10;
+
+document.getElementById("score").innerHTML=score;
+
+if(score>highScore){
+
+highScore=score;
+
+localStorage.setItem("highScore",highScore);
+
+document.getElementById("highscore").innerHTML=highScore;
+
+}
+
+showMessage("🎉 Congratulations! You guessed it!","win");
+
+document.getElementById("guessBtn").disabled=true;
+
+document.getElementById("guess").disabled=true;
+
+return;
+
+}
+
+if(chances===0){
+
+showMessage("💀 Game Over! Number was "+randomNumber,"lose");
+
+document.getElementById("guessBtn").disabled=true;
+
+document.getElementById("guess").disabled=true;
+
+return;
+
+}
+
+if(guess>randomNumber){
+
+showMessage("📉 Too High! Try a smaller number.","info");
+
+}
+else{
+
+showMessage("📈 Too Low! Try a bigger number.","info");
+
+}
+
+document.getElementById("guess").value="";
+
+document.getElementById("guess").focus();
+
+}
+
+function showMessage(text,cls){
+
+let msg=document.getElementById("message");
+
+msg.className=cls;
+
+msg.innerHTML=text;
+
+}
+
+function exitGame(){
+
+document.getElementById("guess").disabled=true;
+
+document.getElementById("guessBtn").disabled=true;
+
+showMessage("👋 Thanks for Playing!","info");
+
+}
+
+</script>
+
+</body>
+</html>
